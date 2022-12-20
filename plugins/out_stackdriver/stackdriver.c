@@ -58,7 +58,7 @@ static void oauth2_cache_exit(void *ptr)
 static void oauth2_cache_free_expiration(void *ptr)
 {
     if (ptr) {
-        flb_free(ptr);
+        // flb_free(ptr);
     }
 }
 
