@@ -95,9 +95,9 @@ static void oauth2_cache_set(char *type, char *token, time_t expires)
     /* oauth2 access token expiration */
     tmp_expires = pthread_getspecific(oauth2_token_expires);
     if (tmp_expires) {
-        // flb_free(tmp_expires);
+        flb_free(tmp_expires);
     }
-    tmp_expires = flb_calloc(1, sizeof(time_t));
+    tmp_expires = flb_malloc(sizeof(time_t));
     if (!tmp_expires) {
         flb_errno();
         return;
