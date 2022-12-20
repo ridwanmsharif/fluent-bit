@@ -108,7 +108,7 @@ static void oauth2_cache_set(struct flb_stackdriver *ctx, char *type, char *toke
         return;
     }
     *tmp_expires = expires;
-    pthread_setspecific(oauth2_token, tmp_expires);
+    pthread_setspecific(oauth2_token_expires, tmp_expires);
 }
 
 /* By using pthread keys cached values, compose the authorizatoin token */
