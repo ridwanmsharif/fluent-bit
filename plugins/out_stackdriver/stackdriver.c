@@ -71,10 +71,11 @@ static void oauth2_cache_init()
 }
 
 /* Set oauth2 type and token in pthread keys */
-static void oauth2_cache_set(char *type, char *token, time_t expires)
+static void oauth2_cache_set(struct flb_stackdriver *ctx, char *type, char *token, time_t expires)
 {
     flb_sds_t tmp;
     time_t *tmp_expires;
+    flb_plg_info(ctx->ins, "Setting token in cache");
 
     /* oauth2 type */
     tmp = pthread_getspecific(oauth2_type);
@@ -83,6 +84,8 @@ static void oauth2_cache_set(char *type, char *token, time_t expires)
     }
     tmp = flb_sds_create(type);
     pthread_setspecific(oauth2_type, tmp);
+    
+    flb_plg_info(ctx->ins, "Done setting oauth2 type in cache");
 
     /* oauth2 access token */
     tmp = pthread_getspecific(oauth2_token);
@@ -91,6 +94,8 @@ static void oauth2_cache_set(char *type, char *token, time_t expires)
     }
     tmp = flb_sds_create(token);
     pthread_setspecific(oauth2_token, tmp);
+    flb_plg_info(ctx->ins, "Done setting access token in cache");
+
 
     /* oauth2 access token expiration */
     tmp_expires = pthread_getspecific(oauth2_token_expires);
@@ -391,7 +396,7 @@ static flb_sds_t get_google_token(struct flb_stackdriver *ctx)
     /* Copy string to prevent race conditions (get_oauth2 can free the string) */
     if (ret == 0) {
         /* Update pthread keys cached values */
-        oauth2_cache_set(ctx->o->token_type, ctx->o->access_token, ctx->o->expires);
+        oauth2_cache_set(ctx, ctx->o->token_type, ctx->o->access_token, ctx->o->expires);
 
         /* Compose outgoing buffer using cached values */
         output = oauth2_cache_to_token();
