@@ -1206,6 +1206,8 @@ static int cb_stackdriver_init(struct flb_output_instance *ins,
 
     /* Initialize oauth2 cache pthread keys */
     flb_info("[out_stackdriver] initializing oauth2 cache");
+    /* Print to stdout that we failed */
+    printf("[out_stackdriver] initializing oauth2 cache");
     oauth2_cache_init();
 
     /* Create mutex for acquiring oauth tokens (they are shared across flush coroutines) */
